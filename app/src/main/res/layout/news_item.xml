@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageNewsItem"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/sectionNameNewsItem"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:background="@drawable/section_background"
+            android:layout_margin="12dp"
+            tools:text="UK News"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/titleNewsItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:textColor="@color/textColorBlack"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageNewsItem"
+            tools:text="Silverstone marshals wary of extra risks to F1 going behind closed doors" />
+
+
+        <ImageView
+            android:id="@+id/guardianIconNewsItem"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="12dp"
+            android:src="@drawable/guardianlogo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleNewsItem" />
+
+        <TextView
+            android:id="@+id/theGuardianNewsItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/the_guardian"
+            app:layout_constraintBottom_toBottomOf="@id/guardianIconNewsItem"
+            app:layout_constraintStart_toEndOf="@id/guardianIconNewsItem"
+            app:layout_constraintTop_toTopOf="@id/guardianIconNewsItem" />
+
+        <ImageView
+            android:id="@+id/lensNewsItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_lens_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/guardianIconNewsItem"
+            app:layout_constraintStart_toEndOf="@id/theGuardianNewsItem"
+            app:layout_constraintTop_toTopOf="@id/guardianIconNewsItem" />
+
+        <TextView
+            android:id="@+id/timeNewsItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/guardianIconNewsItem"
+            app:layout_constraintStart_toEndOf="@id/lensNewsItem"
+            app:layout_constraintTop_toTopOf="@id/guardianIconNewsItem"
+            tools:text="8 hours ago" />
+
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_share_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleNewsItem" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

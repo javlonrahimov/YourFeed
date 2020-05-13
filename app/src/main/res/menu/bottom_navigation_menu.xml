@@ -1,0 +1,24 @@
+<!-- bottom_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/exploreMenu"
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title="Explore"
+        app:cnb_iconColor="#fff"/>
+    <item
+        android:id="@+id/searchMenu"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        app:cnb_iconColor="#fff"/>
+    <item
+        android:id="@+id/topicsMenu"
+        android:icon="@drawable/ic_bubble_chart_black_24dp"
+        android:title="Topics"
+        app:cnb_iconColor="#fff" />
+    <item
+        android:id="@+id/interestsMenu"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="Interests"
+        app:cnb_iconColor="#fff" />
+</menu>

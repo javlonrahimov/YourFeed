@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">YourFeed</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="select_topics">Select topics.</string>
+    <string name="sport">Sport</string>
+    <string name="technology">Technology</string>
+    <string name="health">Health</string>
+    <string name="politics">Politics</string>
+    <string name="news_image">news image</string>
+    <string name="music">Music</string>
+    <string name="film">Film</string>
+    <string name="business">Business</string>
+    <string name="send_to">Send to</string>
+    <string name="the_guardian">The Guardian</string>
+    <string name="your_topics">Your topics</string>
+</resources>
