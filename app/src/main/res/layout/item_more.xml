@@ -2,23 +2,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:padding="4dp">
+    android:layout_margin="@dimen/margin4"
+    android:padding="@dimen/padding4">
 
     <TextView
-        android:layout_gravity="center"
         android:id="@+id/textMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="More"
-        android:textColor="#388E3C"
-        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:text="@string/more"
+        android:textColor="@color/mainColor"
+        android:textSize="@dimen/textView18"
         android:textStyle="bold" />
 
     <ProgressBar
         android:id="@+id/progressBarMore"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:visibility="gone" />
 </FrameLayout>

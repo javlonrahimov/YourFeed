@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:elevation="4dp" />
+        android:elevation="@dimen/elevation4" />
 
     <TextView
         android:id="@+id/noInternetWorkerFragment"
@@ -26,9 +26,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawableBottom="@drawable/ic_replay_black_24dp"
-        android:text="No internet connection"
+        android:text="@string/no_internet_connection"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/textView18"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/noDataWorkerFragment"
@@ -36,7 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawableTop="@drawable/ic_markunread_black_24dp"
-        android:text="No data found"
+        android:text="@string/no_data_found"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/textView18"
+        android:visibility="gone" />
 </FrameLayout>

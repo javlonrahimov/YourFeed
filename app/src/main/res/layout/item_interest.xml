@@ -3,17 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp">
+    android:padding="@dimen/padding16">
 
     <TextView
         android:id="@+id/textItemInterest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="@dimen/margin50"
         tools:text="@string/sport"
-        android:textColor="#272727"
-        android:textSize="18sp"
+        android:textColor="@color/textColorBlack"
+        android:textSize="@dimen/textView18"
         android:textStyle="bold" />
 
     <Switch

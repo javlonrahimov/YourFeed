@@ -24,6 +24,7 @@ import com.rahimovjavlon1212.yourfeed.models.NewsModel;
 import com.rahimovjavlon1212.yourfeed.network.NewsAsyncTaskLoader;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<NewsModel>> {
     private RecyclerView recyclerView;
@@ -32,8 +33,9 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView noInternet;
     private TextView noData;
     private int page = 1;
-    private int OPERATION_SEARCH_LOADER = 564;
-    private String OPERATION_QUERY_URL_EXTRA = "56";
+    private int SEARCH_LOADER_KEY = 564;
+    private String QUERY_KEY = "576";
+    private String PAGE_KEY = "156";
     private boolean isNewQuery = false;
 
     public SearchFragment() {
@@ -51,72 +53,39 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         progressBar = view.findViewById(R.id.progressBarSearchFragment);
         noData = view.findViewById(R.id.noDataSearchFragment);
         noInternet = view.findViewById(R.id.noInternetSearchFragment);
-        noData.setVisibility(View.INVISIBLE);
-        noInternet.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        noInternet.setOnClickListener(e -> {
+            if (isNetworkAvailable()) {
+                Objects.requireNonNull(getActivity()).getSupportLoaderManager().initLoader(SEARCH_LOADER_KEY, null, this);
+                noInternet.setVisibility(View.INVISIBLE);
+            }
+        });
         if (!isNetworkAvailable()) {
             recyclerView.setVisibility(View.INVISIBLE);
-            noInternet.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            noInternet.setOnClickListener(e -> {
-                noInternet.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                if (isNetworkAvailable()) {
-                    getActivity().getSupportLoaderManager().initLoader(OPERATION_SEARCH_LOADER, null, this);
-                } else {
-                    noInternet.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+            noInternet.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.INVISIBLE);
         } else {
-            getActivity().getSupportLoaderManager().initLoader(OPERATION_SEARCH_LOADER, null, this);
+            Objects.requireNonNull(getActivity()).getSupportLoaderManager().initLoader(SEARCH_LOADER_KEY, null, this);
         }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 isNewQuery = true;
                 if (!isNetworkAvailable()) {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    noInternet.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
-                    noInternet.setOnClickListener(e -> {
-                        noInternet.setVisibility(View.INVISIBLE);
-                        progressBar.setVisibility(View.VISIBLE);
-                        if (isNetworkAvailable()) {
-                            makeOperationSearchQuery(query, page++);
-                        } else {
-                            noInternet.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }
-                    });
+                    noInternet.setVisibility(View.VISIBLE);
                 } else {
                     makeOperationSearchQuery(query, page++);
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
                 }
                 newsAdapter.onMoreClicked = () -> {
                     isNewQuery = false;
                     if (!isNetworkAvailable()) {
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        noInternet.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
-                        noInternet.setOnClickListener(e -> {
-                            noInternet.setVisibility(View.INVISIBLE);
-                            progressBar.setVisibility(View.VISIBLE);
-                            if (isNetworkAvailable()) {
-                                makeOperationSearchQuery(query, page++);
-                                noInternet.setVisibility(View.INVISIBLE);
-                            } else {
-                                noInternet.setVisibility(View.VISIBLE);
-                                progressBar.setVisibility(View.INVISIBLE);
-                            }
-                        });
                     } else {
-                        progressBar.setVisibility(View.VISIBLE);
-                        noInternet.setVisibility(View.INVISIBLE);
                         makeOperationSearchQuery(query, page++);
                     }
                 };
+                recyclerView.setVisibility(View.INVISIBLE);
                 return false;
             }
 
@@ -131,56 +100,54 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     @NonNull
     @Override
     public Loader<List<NewsModel>> onCreateLoader(int id, @Nullable Bundle args) {
+        progressBar.setVisibility(View.VISIBLE);
         if (args != null) {
-            return new NewsAsyncTaskLoader(getContext(), args.getString(OPERATION_QUERY_URL_EXTRA, ""), "", args.getInt("KEY"));
+            return new NewsAsyncTaskLoader(Objects.requireNonNull(getContext()), args.getString(QUERY_KEY, ""), "", args.getInt(PAGE_KEY));
         }
-        return new NewsAsyncTaskLoader(getContext(), "", "", page++);
+        return new NewsAsyncTaskLoader(Objects.requireNonNull(getContext()), "", "", page++);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<NewsModel>> loader, List<NewsModel> data) {
         if (data.isEmpty()) {
-            noData.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
         } else {
             noData.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
             if (isNewQuery) {
                 newsAdapter.setData(data);
             } else {
                 newsAdapter.addData(data);
             }
+            recyclerView.setAdapter(newsAdapter);
+            if (page > 1) {
+                recyclerView.scrollToPosition(newsAdapter.startPosition - 1);
+            }
         }
-        noInternet.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
-        recyclerView.setAdapter(newsAdapter);
-        recyclerView.setVisibility(View.VISIBLE);
-        if (page > 1) {
-            recyclerView.scrollToPosition(newsAdapter.startPosition - 1);
-        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<NewsModel>> loader) {
-
     }
 
     private void makeOperationSearchQuery(String query, int page) {
-        noData.setVisibility(View.INVISIBLE);
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(OPERATION_QUERY_URL_EXTRA, query);
-        queryBundle.putInt("KEY", page);
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        Loader<String> loader = loaderManager.getLoader(OPERATION_SEARCH_LOADER);
+        queryBundle.putString(QUERY_KEY, query);
+        queryBundle.putInt(PAGE_KEY, page);
+        LoaderManager loaderManager = Objects.requireNonNull(getActivity()).getSupportLoaderManager();
+        Loader<String> loader = loaderManager.getLoader(SEARCH_LOADER_KEY);
         if (loader == null) {
-            loaderManager.initLoader(OPERATION_SEARCH_LOADER, queryBundle, this);
+            loaderManager.initLoader(SEARCH_LOADER_KEY, queryBundle, this);
         } else {
-            loaderManager.restartLoader(OPERATION_SEARCH_LOADER, queryBundle, this);
+            loaderManager.restartLoader(SEARCH_LOADER_KEY, queryBundle, this);
         }
     }
 
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

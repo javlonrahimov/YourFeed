@@ -15,4 +15,24 @@
     <string name="send_to">Send to</string>
     <string name="the_guardian">The Guardian</string>
     <string name="your_topics">Your topics</string>
+    <string name="select_topics_from_topics_tab">Select topics from Topics tab.</string>
+    <string name="no_data_found">No data found</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="more">More</string>
+    <string name="guardian_icon">guardian icon</string>
+    <string name="divider_dot">divider dot</string>
+    <string name="share_button">share button</string>
+    <string name="explore">Explore</string>
+    <string name="search">Search</string>
+    <string name="topics">Topics</string>
+    <string name="interests">Interests</string>
+    <string name="api_key">411ba45a-ed1c-4cba-a786-c4367692e36e</string>
+    <string name="order_relevance">relevance</string>
+    <string name="order_newest">newest</string>
+    <string name="search_path">search</string>
+    <string name="json">json</string>
+    <string name="show_fields">headline,thumbnail</string>
+    <string name="authority">content.guardianapis.com</string>
+    <string name="scheme">https</string>
+    <string name="sections">sections</string>
 </resources>

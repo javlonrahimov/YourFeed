@@ -13,8 +13,11 @@ import androidx.room.Room;
 import com.rahimovjavlon1212.yourfeed.R;
 import com.rahimovjavlon1212.yourfeed.database.TopicsDatabase;
 import com.rahimovjavlon1212.yourfeed.models.TopicModel;
+import com.rahimovjavlon1212.yourfeed.utils.Utils;
 
 import java.util.List;
+
+import static com.rahimovjavlon1212.yourfeed.utils.Utils.DATABASE_NAME;
 
 public class TopicsAdapter extends RecyclerView.Adapter<TopicItemViewHolder> {
 
@@ -22,7 +25,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicItemViewHolder> {
     private TopicsDatabase topicsDatabase;
 
     public TopicsAdapter(Context context) {
-        topicsDatabase = Room.databaseBuilder(context,TopicsDatabase.class,"TopicsDB").allowMainThreadQueries().build();
+        topicsDatabase = Room.databaseBuilder(context, TopicsDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
     }
 
     public void setData(List<TopicModel> data) {
@@ -63,7 +66,7 @@ class TopicItemViewHolder extends RecyclerView.ViewHolder {
 
     TextView name;
 
-    public TopicItemViewHolder(@NonNull View itemView) {
+    TopicItemViewHolder(@NonNull View itemView) {
         super(itemView);
 
         name = itemView.findViewById(R.id.nameTopicItem);

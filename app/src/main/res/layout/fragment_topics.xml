@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/margin8"
         android:text="@string/select_topics"
         android:textAlignment="center"
-        android:textColor="#272727"
-        android:textSize="26sp"
+        android:textColor="@color/textColorBlack"
+        android:textSize="@dimen/textColor26"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,6 +32,7 @@
         tools:listitem="@layout/item_topic" />
 
     <ProgressBar
+        android:visibility="gone"
         android:id="@+id/progressBarTopicsFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,9 +46,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableBottom="@drawable/ic_replay_black_24dp"
-        android:text="No internet connection"
+        android:text="@string/no_internet_connection"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="@dimen/textView18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,9 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_markunread_black_24dp"
-        android:text="No data found"
+        android:text="@string/no_data_found"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="@dimen/textView18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

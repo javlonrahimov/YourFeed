@@ -1,12 +1,14 @@
 package com.rahimovjavlon1212.yourfeed.network;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.content.AsyncTaskLoader;
 
+import com.rahimovjavlon1212.yourfeed.R;
 import com.rahimovjavlon1212.yourfeed.models.NewsModel;
 
 import org.json.JSONArray;
@@ -39,12 +41,20 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
 
     private URL createUrlSearch(String query, String page) {
         query = query.trim();
-        String stringUrl = "https://content.guardianapis.com/search?format=json&show-fields=headline,thumbnail&order-by=relevance&api-key=411ba45a-ed1c-4cba-a786-c4367692e36e&page=";
-        stringUrl += page;
-        stringUrl += "&q=" + query;
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(getContext().getResources().getString(R.string.scheme))
+                .authority(getContext().getResources().getString(R.string.authority))
+                .appendPath(getContext().getResources().getString(R.string.search_path))
+                .appendQueryParameter("format",getContext().getResources().getString(R.string.json))
+                .appendQueryParameter("show-fields",getContext().getResources().getString(R.string.show_fields))
+                .appendQueryParameter("order-by",getContext().getResources().getString(R.string.order_relevance))
+                .appendQueryParameter("api-key", getContext().getResources().getString(R.string.api_key))
+                .appendQueryParameter("page", page)
+                .appendQueryParameter("q", query)
+                .build();
         URL url;
         try {
-            url = new URL(stringUrl);
+            url = new URL(builder.toString());
         } catch (MalformedURLException exception) {
             Log.e("LOG_TAG", "Error with creating URL", exception);
             return null;
@@ -53,12 +63,20 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
     }
 
     private URL createUrlExplore(String section, String page) {
-        String stringUrl = "https://content.guardianapis.com/search?format=json&show-fields=headline,thumbnail&order-by=newest&api-key=411ba45a-ed1c-4cba-a786-c4367692e36e&page=";
-        stringUrl += page;
-        stringUrl += "&section=" + section;
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(getContext().getResources().getString(R.string.scheme))
+                .authority(getContext().getResources().getString(R.string.authority))
+                .appendPath(getContext().getResources().getString(R.string.search_path))
+                .appendQueryParameter("format",getContext().getResources().getString(R.string.json))
+                .appendQueryParameter("show-fields",getContext().getResources().getString(R.string.show_fields))
+                .appendQueryParameter("order-by",getContext().getResources().getString(R.string.order_newest))
+                .appendQueryParameter("api-key", getContext().getResources().getString(R.string.api_key))
+                .appendQueryParameter("page", page)
+                .appendQueryParameter("section", section)
+                .build();
         URL url;
         try {
-            url = new URL(stringUrl);
+            url = new URL(builder.toString());
         } catch (MalformedURLException exception) {
             Log.e("LOG_TAG", "Error with creating URL", exception);
             return null;
@@ -111,18 +129,20 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
         try {
             JSONObject baseJsonObject = new JSONObject(newsJSON);
             JSONObject response = baseJsonObject.getJSONObject("response");
-            JSONArray results = response.getJSONArray("results");
-            if (results.length() > 0) {
-                for (int i = 0; i < results.length(); i++) {
-                    JSONObject resultObject = results.getJSONObject(i);
-                    JSONObject fields = resultObject.getJSONObject("fields");
+            if (response.getString("status").equals("ok")) {
+                JSONArray results = response.getJSONArray("results");
+                if (results.length() > 0) {
+                    for (int i = 0; i < results.length(); i++) {
+                        JSONObject resultObject = results.getJSONObject(i);
+                        JSONObject fields = resultObject.getJSONObject("fields");
 
-                    String date = resultObject.getString("webPublicationDate");
-                    String url = resultObject.getString("webUrl");
-                    String sectionName = resultObject.getString("sectionName");
-                    String imgUrl = fields.getString("thumbnail");
-                    String title = fields.getString("headline");
-                    resultList.add(new NewsModel(title, date, imgUrl, url, sectionName));
+                        String date = resultObject.getString("webPublicationDate");
+                        String url = resultObject.getString("webUrl");
+                        String sectionName = resultObject.getString("sectionName");
+                        String imgUrl = fields.getString("thumbnail");
+                        String title = fields.getString("headline");
+                        resultList.add(new NewsModel(title, date, imgUrl, url, sectionName));
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -147,7 +167,7 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
                 jsonResponse = makeHttpRequest(url);
             }
         } catch (IOException e) {
-            Log.d("LOG_TAG",e.toString());
+            Log.d("LOG_TAG", e.toString());
         }
         return extractFeatureFromJSON(jsonResponse);
     }

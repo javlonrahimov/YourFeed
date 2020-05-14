@@ -11,13 +11,13 @@
         android:id="@+id/tabLayoutExploreFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="4dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
+        android:elevation="@dimen/elevation4"
+        android:paddingStart="@dimen/padding8"
+        android:paddingEnd="@dimen/padding8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorHeight="0dp"
+        app:tabIndicatorHeight="@dimen/tabIndicatorHeight"
         app:tabMode="scrollable" />
 
     <androidx.viewpager.widget.ViewPager
@@ -40,8 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Select topics from interests tab."
-            android:textSize="22sp" />
+            android:text="@string/select_topics_from_topics_tab"
+            android:textSize="@dimen/textSize22" />
 
     </FrameLayout>
 

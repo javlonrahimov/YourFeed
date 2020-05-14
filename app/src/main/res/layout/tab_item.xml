@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
+    android:layout_marginTop="@dimen/margin4"
+    android:layout_marginBottom="@dimen/margin4"
     android:background="@drawable/tab_item_background"
-    android:paddingStart="12dp"
-    android:paddingTop="4dp"
-    android:paddingEnd="12dp"
-    android:paddingBottom="4dp">
+    android:paddingStart="@dimen/padding12"
+    android:paddingTop="@dimen/padding4"
+    android:paddingEnd="@dimen/padding12"
+    android:paddingBottom="@dimen/padding4">
 
     <TextView
-        android:textAllCaps="true"
-        android:textStyle="bold"
         android:id="@+id/tabTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:text="Sports"
+        android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="@dimen/textSize16"
+        android:textStyle="bold"
+        tools:text="Sports" />
 
 </FrameLayout>

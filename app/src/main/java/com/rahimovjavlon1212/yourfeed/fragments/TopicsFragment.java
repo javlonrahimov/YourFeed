@@ -26,6 +26,9 @@ import com.rahimovjavlon1212.yourfeed.network.TopicsAsyncTaskLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.rahimovjavlon1212.yourfeed.utils.Utils.DATABASE_NAME;
 
 public class TopicsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<TopicModel>> {
 
@@ -36,8 +39,11 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView noData;
     private TopicsDatabase topicsDatabase;
 
+    public TopicsFragment() {
+    }
+
     public TopicsFragment(Context context) {
-        topicsDatabase = Room.databaseBuilder(context, TopicsDatabase.class, "TopicsDB").allowMainThreadQueries().build();
+        topicsDatabase = Room.databaseBuilder(context, TopicsDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
     }
 
 
@@ -52,7 +58,7 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
         noInternet = view.findViewById(R.id.noInternetTopicsFragment);
         noData = view.findViewById(R.id.noDataTopicsFragment);
         if (isNetworkAvailable()) {
-            getActivity().getSupportLoaderManager().initLoader(2589, null, this);
+            Objects.requireNonNull(getActivity()).getSupportLoaderManager().initLoader(2589, null, this);
             noInternet.setVisibility(View.INVISIBLE);
             noData.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
@@ -63,10 +69,9 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
             noInternet.setVisibility(View.VISIBLE);
             noInternet.setOnClickListener(e -> {
                 if (isNetworkAvailable()) {
-                    getActivity().getSupportLoaderManager().initLoader(2589, null, this);
+                    Objects.requireNonNull(getActivity()).getSupportLoaderManager().initLoader(2589, null, this);
                     noData.setVisibility(View.INVISIBLE);
                     noInternet.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                 }
             });
@@ -77,7 +82,8 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     @NonNull
     @Override
     public Loader<List<TopicModel>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new TopicsAsyncTaskLoader(getContext());
+        progressBar.setVisibility(View.VISIBLE);
+        return new TopicsAsyncTaskLoader(Objects.requireNonNull(getContext()));
     }
 
     @Override
@@ -111,8 +117,8 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 

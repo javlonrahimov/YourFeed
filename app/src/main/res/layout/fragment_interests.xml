@@ -14,8 +14,8 @@
         android:layout_margin="8dp"
         android:text="@string/your_topics"
         android:textAlignment="center"
-        android:textColor="#272727"
-        android:textSize="26sp"
+        android:textColor="@color/textColorBlack"
+        android:textSize="@dimen/textSize26"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
 

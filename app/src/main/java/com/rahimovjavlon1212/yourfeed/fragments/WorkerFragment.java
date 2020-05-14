@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +35,16 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
     private ProgressBar progressBar;
     private TextView noInternet;
     private TextView noData;
+    private String SECTION_KEY = "576";
+    private String PAGE_KEY = "156";
     private int page = 1;
 
     public WorkerFragment(TopicModel topicModel) {
         this.topicModel = topicModel;
     }
 
+    public WorkerFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +58,6 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
         noInternet.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         newsAdapter = new NewsAdapter();
-        Log.d("HELLO", isNetworkAvailable() + "");
         if (!isNetworkAvailable()) {
             recyclerView.setVisibility(View.INVISIBLE);
             noInternet.setVisibility(View.VISIBLE);
@@ -75,7 +77,8 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
         } else {
             noInternet.setVisibility(View.INVISIBLE);
             newsAdapter.onMoreClicked = () -> makeOperationSearchQuery(topicModel.getSectionId(), page++);
-            makeOperationSearchQuery(topicModel.getSectionId(), page++);
+            if (topicModel != null)
+                makeOperationSearchQuery(topicModel.getSectionId(), page++);
         }
         return view;
     }
@@ -84,7 +87,7 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<List<NewsModel>> onCreateLoader(int id, @Nullable Bundle args) {
         if (args != null) {
-            return new NewsAsyncTaskLoader(Objects.requireNonNull(getContext()), "", args.getString("KEY1"), args.getInt("KEY2"));
+            return new NewsAsyncTaskLoader(Objects.requireNonNull(getContext()), "", args.getString(SECTION_KEY), args.getInt(PAGE_KEY));
         }
         return new NewsAsyncTaskLoader(Objects.requireNonNull(getContext()), "", topicModel.getSectionId(), page++);
     }
@@ -114,20 +117,21 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void makeOperationSearchQuery(String query, int page) {
         Bundle queryBundle = new Bundle();
-        queryBundle.putString("KEY1", query);
-        queryBundle.putInt("KEY2", page);
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        Loader<String> loader = loaderManager.getLoader(123);
+        queryBundle.putString(SECTION_KEY, query);
+        queryBundle.putInt(PAGE_KEY, page);
+        LoaderManager loaderManager = Objects.requireNonNull(getActivity()).getSupportLoaderManager();
+        int WORKER_LOADER_KEY = 123;
+        Loader<String> loader = loaderManager.getLoader(WORKER_LOADER_KEY);
         if (loader == null) {
-            loaderManager.initLoader(123, queryBundle, this);
+            loaderManager.initLoader(WORKER_LOADER_KEY, queryBundle, this);
         } else {
-            loaderManager.restartLoader(123, queryBundle, this);
+            loaderManager.restartLoader(WORKER_LOADER_KEY, queryBundle, this);
         }
     }
 
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

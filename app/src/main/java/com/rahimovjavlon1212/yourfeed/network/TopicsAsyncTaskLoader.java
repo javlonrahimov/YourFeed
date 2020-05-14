@@ -1,12 +1,14 @@
 package com.rahimovjavlon1212.yourfeed.network;
 
 import android.content.Context;
-import android.widget.Toast;
+import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.content.AsyncTaskLoader;
 
+import com.rahimovjavlon1212.yourfeed.R;
 import com.rahimovjavlon1212.yourfeed.models.TopicModel;
 
 import org.json.JSONArray;
@@ -31,12 +33,17 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
     }
 
     private URL createUrl() {
-        String stringUrl = "https://content.guardianapis.com/sections?api-key=test";
         URL url;
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(getContext().getResources().getString(R.string.scheme))
+                .authority(getContext().getResources().getString(R.string.authority))
+                .appendPath(getContext().getResources().getString(R.string.sections))
+                .appendQueryParameter("api-key", getContext().getResources().getString(R.string.api_key))
+                .build();
         try {
-            url = new URL(stringUrl);
+            url = new URL(builder.toString());
         } catch (MalformedURLException exception) {
-            Toast.makeText(getContext(), "Something went wrong !!!", Toast.LENGTH_SHORT).show();
+            Log.e("LOG_TAG", "Error with creating URL", exception);
             return null;
         }
         return url;
@@ -55,7 +62,7 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
             inputStream = urlConnection.getInputStream();
             jsonResponse = readFromStream(inputStream);
         } catch (IOException e) {
-            Toast.makeText(getContext(), "Something went wrong !!!", Toast.LENGTH_SHORT).show();
+            Log.d("LOG_TAG", e.toString());
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -97,11 +104,9 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
                         resultList.add(new TopicModel(0, sectionId, sectionName));
                     }
                 }
-            }else {
-                Toast.makeText(getContext(), "Bad request !!!", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            Toast.makeText(getContext(), "Something went wrong !!!", Toast.LENGTH_SHORT).show();
+            Log.e("LOG_TAG", "Problem parsing the news JSON results", e);
         }
 
         return resultList;
@@ -117,7 +122,7 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
                 jsonResponse = makeHttpRequest(url);
             }
         } catch (IOException e) {
-            Toast.makeText(getContext(), "Something went wrong !!!", Toast.LENGTH_SHORT).show();
+            Log.d("LOG_TAG", e.toString());
         }
 
         return new ArrayList<>(extractFeatureFromJSON(jsonResponse));

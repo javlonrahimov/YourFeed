@@ -22,13 +22,18 @@ import com.rahimovjavlon1212.yourfeed.models.TopicModel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static com.rahimovjavlon1212.yourfeed.utils.Utils.DATABASE_NAME;
+
 public class ExploreFragment extends Fragment {
 
     private ArrayList<TopicModel> topicModels;
     private TopicsDatabase topicsDatabase;
 
+    public ExploreFragment() {
+    }
+
     public ExploreFragment(Context context) {
-        topicsDatabase = Room.databaseBuilder(context, TopicsDatabase.class,"TopicsDB").allowMainThreadQueries().build();
+        topicsDatabase = Room.databaseBuilder(context, TopicsDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
     }
 
 
@@ -37,7 +42,9 @@ public class ExploreFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        setData();
+        topicsDatabase = Room.databaseBuilder(Objects.requireNonNull(getContext()), TopicsDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+        topicModels = new ArrayList<>();
+        topicModels.addAll(topicsDatabase.getTopicDao().getTopics());
 
 
         if (topicModels.size() == 0) {
@@ -45,7 +52,7 @@ public class ExploreFragment extends Fragment {
         } else {
             view.findViewById(R.id.placeholderExploreFragment).setVisibility(View.INVISIBLE);
             ViewPager viewPager = view.findViewById(R.id.viewPagerExploreFragment);
-            MyPagerAdapter myPagerAdapter = new MyPagerAdapter(Objects.requireNonNull(getFragmentManager()), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT , topicModels);
+            MyPagerAdapter myPagerAdapter = new MyPagerAdapter(Objects.requireNonNull(getFragmentManager()), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, topicModels);
             viewPager.setAdapter(myPagerAdapter);
             TabLayout tabLayout = view.findViewById(R.id.tabLayoutExploreFragment);
             tabLayout.setupWithViewPager(viewPager);
@@ -100,11 +107,7 @@ public class ExploreFragment extends Fragment {
                 }
             });
         }
-        return view;
-    }
 
-    private void setData() {
-        topicModels = new ArrayList<>();
-        topicModels.addAll(topicsDatabase.getTopicDao().getTopics());
+        return view;
     }
 }

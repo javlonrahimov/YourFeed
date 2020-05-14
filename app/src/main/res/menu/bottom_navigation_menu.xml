@@ -4,21 +4,21 @@
     <item
         android:id="@+id/exploreMenu"
         android:icon="@drawable/ic_explore_black_24dp"
-        android:title="Explore"
-        app:cnb_iconColor="#fff"/>
+        android:title="@string/explore"
+        app:cnb_iconColor="@android:color/white" />
     <item
         android:id="@+id/searchMenu"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search"
-        app:cnb_iconColor="#fff"/>
+        android:title="@string/search"
+        app:cnb_iconColor="@android:color/white" />
     <item
         android:id="@+id/topicsMenu"
         android:icon="@drawable/ic_bubble_chart_black_24dp"
-        android:title="Topics"
-        app:cnb_iconColor="#fff" />
+        android:title="@string/topics"
+        app:cnb_iconColor="@android:color/white" />
     <item
         android:id="@+id/interestsMenu"
         android:icon="@drawable/ic_account_circle_black_24dp"
-        android:title="Interests"
-        app:cnb_iconColor="#fff" />
+        android:title="@string/interests"
+        app:cnb_iconColor="@android:color/white" />
 </menu>

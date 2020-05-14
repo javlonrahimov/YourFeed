@@ -17,9 +17,9 @@
 
     <com.ismaeldivita.chipnavigation.ChipNavigationBar
         android:id="@+id/navigationBar"
-        android:background="#388E3C"
+        android:background="@color/mainColor"
         app:cnb_unselectedColor="@android:color/white"
-        android:elevation="4dp"
+        android:elevation="@dimen/elevation4"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:cnb_menuResource="@menu/bottom_navigation_menu"
