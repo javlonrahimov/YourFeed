@@ -51,34 +51,30 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_worker, container, false);
         recyclerView = view.findViewById(R.id.recyclerViewWorkerFragment);
+        newsAdapter = new NewsAdapter();
         progressBar = view.findViewById(R.id.progressBarWorkerFragment);
         noData = view.findViewById(R.id.noDataWorkerFragment);
         noInternet = view.findViewById(R.id.noInternetWorkerFragment);
-        noData.setVisibility(View.INVISIBLE);
-        noInternet.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        newsAdapter = new NewsAdapter();
+        noInternet.setOnClickListener(e -> {
+            noInternet.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            if (isNetworkAvailable()) {
+                newsAdapter.onMoreClicked = () -> makeOperationSearchQuery(topicModel.getSectionId(), page++, true);
+                makeOperationSearchQuery(topicModel.getSectionId(), page++, false);
+                noInternet.setVisibility(View.INVISIBLE);
+            } else {
+                noInternet.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
         if (!isNetworkAvailable()) {
             recyclerView.setVisibility(View.INVISIBLE);
-            noInternet.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            noInternet.setOnClickListener(e -> {
-                noInternet.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                if (isNetworkAvailable()) {
-                    newsAdapter.onMoreClicked = () -> makeOperationSearchQuery(topicModel.getSectionId(), page++);
-                    makeOperationSearchQuery(topicModel.getSectionId(), page++);
-                    noInternet.setVisibility(View.INVISIBLE);
-                } else {
-                    noInternet.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+            noInternet.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.INVISIBLE);
         } else {
-            noInternet.setVisibility(View.INVISIBLE);
-            newsAdapter.onMoreClicked = () -> makeOperationSearchQuery(topicModel.getSectionId(), page++);
-            if (topicModel != null)
-                makeOperationSearchQuery(topicModel.getSectionId(), page++);
+            newsAdapter.onMoreClicked = () -> makeOperationSearchQuery(topicModel.getSectionId(), page++, true);
+            makeOperationSearchQuery(topicModel.getSectionId(), page++, false);
         }
         return view;
     }
@@ -115,18 +111,16 @@ public class WorkerFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
-    private void makeOperationSearchQuery(String query, int page) {
+    private void makeOperationSearchQuery(String query, int page, boolean fromMore) {
         Bundle queryBundle = new Bundle();
         queryBundle.putString(SECTION_KEY, query);
         queryBundle.putInt(PAGE_KEY, page);
         LoaderManager loaderManager = Objects.requireNonNull(getActivity()).getSupportLoaderManager();
-        int WORKER_LOADER_KEY = 123;
-        Loader<String> loader = loaderManager.getLoader(WORKER_LOADER_KEY);
-        if (loader == null) {
-            loaderManager.initLoader(WORKER_LOADER_KEY, queryBundle, this);
-        } else {
+        int WORKER_LOADER_KEY = query.hashCode();
+        if (fromMore) {
             loaderManager.restartLoader(WORKER_LOADER_KEY, queryBundle, this);
-        }
+        } else
+            loaderManager.initLoader(WORKER_LOADER_KEY, queryBundle, this);
     }
 
     private boolean isNetworkAvailable() {

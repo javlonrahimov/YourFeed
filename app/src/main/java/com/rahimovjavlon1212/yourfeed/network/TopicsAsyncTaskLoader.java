@@ -2,7 +2,6 @@ package com.rahimovjavlon1212.yourfeed.network;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +42,6 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
         try {
             url = new URL(builder.toString());
         } catch (MalformedURLException exception) {
-            Log.e("LOG_TAG", "Error with creating URL", exception);
             return null;
         }
         return url;
@@ -62,7 +60,7 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
             inputStream = urlConnection.getInputStream();
             jsonResponse = readFromStream(inputStream);
         } catch (IOException e) {
-            Log.d("LOG_TAG", e.toString());
+            return jsonResponse;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -106,7 +104,7 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
                 }
             }
         } catch (JSONException e) {
-            Log.e("LOG_TAG", "Problem parsing the news JSON results", e);
+            return resultList;
         }
 
         return resultList;
@@ -122,10 +120,10 @@ public class TopicsAsyncTaskLoader extends AsyncTaskLoader<List<TopicModel>> {
                 jsonResponse = makeHttpRequest(url);
             }
         } catch (IOException e) {
-            Log.d("LOG_TAG", e.toString());
+            return extractFeatureFromJSON(jsonResponse);
         }
 
-        return new ArrayList<>(extractFeatureFromJSON(jsonResponse));
+        return extractFeatureFromJSON(jsonResponse);
     }
 
     @Override

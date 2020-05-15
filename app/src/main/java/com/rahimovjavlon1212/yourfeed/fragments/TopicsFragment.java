@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,8 +102,12 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     private List<TopicModel> getFilteredData(List<TopicModel> allData) {
         List<TopicModel> resultData = new ArrayList<>();
         List<TopicModel> dataInsideDatabase = topicsDatabase.getTopicDao().getTopics();
+        List<String> strings= new ArrayList<>();
+        for (int i = 0; i < dataInsideDatabase.size(); i++) {
+            strings.add(dataInsideDatabase.get(i).getSectionId());
+        }
         for (int i = 0; i < allData.size(); i++) {
-            if (!dataInsideDatabase.contains(allData.get(i))) {
+            if (!strings.contains(allData.get(i).getSectionId())) {
                 resultData.add(allData.get(i));
             }
         }

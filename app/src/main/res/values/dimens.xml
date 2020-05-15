@@ -21,4 +21,5 @@
     <dimen name="imageSize12">12dp</dimen>
     <dimen name="padding12">12dp</dimen>
     <dimen name="textSize16">16sp</dimen>
+    <dimen name="progressSize">18dp</dimen>
 </resources>

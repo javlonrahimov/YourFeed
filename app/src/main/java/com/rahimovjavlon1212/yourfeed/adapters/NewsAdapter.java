@@ -63,13 +63,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsItemViewHolder> {
             });
         } else {
             NewsModel news = mData.get(position);
-
-            Picasso.get()
-                    .load(news.getImageUri())
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.error_placeholder)
-                    .into(holder.image);
-
+            if (news.getImageUri().isEmpty()) {
+                holder.image.setImageResource(R.drawable.error_placeholder);
+            } else {
+                Picasso.get()
+                        .load(news.getImageUri())
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.error_placeholder)
+                        .into(holder.image);
+            }
             holder.title.setText(news.getTitle());
             holder.time.setText(news.getDate().substring(0, 10));
             holder.sectionName.setText(news.getSectionName());

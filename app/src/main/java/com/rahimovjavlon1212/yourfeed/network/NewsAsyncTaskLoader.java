@@ -2,7 +2,6 @@ package com.rahimovjavlon1212.yourfeed.network;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,9 +44,9 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
         builder.scheme(getContext().getResources().getString(R.string.scheme))
                 .authority(getContext().getResources().getString(R.string.authority))
                 .appendPath(getContext().getResources().getString(R.string.search_path))
-                .appendQueryParameter("format",getContext().getResources().getString(R.string.json))
-                .appendQueryParameter("show-fields",getContext().getResources().getString(R.string.show_fields))
-                .appendQueryParameter("order-by",getContext().getResources().getString(R.string.order_relevance))
+                .appendQueryParameter("format", getContext().getResources().getString(R.string.json))
+                .appendQueryParameter("show-fields", getContext().getResources().getString(R.string.show_fields))
+                .appendQueryParameter("order-by", getContext().getResources().getString(R.string.order_relevance))
                 .appendQueryParameter("api-key", getContext().getResources().getString(R.string.api_key))
                 .appendQueryParameter("page", page)
                 .appendQueryParameter("q", query)
@@ -56,7 +55,6 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
         try {
             url = new URL(builder.toString());
         } catch (MalformedURLException exception) {
-            Log.e("LOG_TAG", "Error with creating URL", exception);
             return null;
         }
         return url;
@@ -67,9 +65,9 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
         builder.scheme(getContext().getResources().getString(R.string.scheme))
                 .authority(getContext().getResources().getString(R.string.authority))
                 .appendPath(getContext().getResources().getString(R.string.search_path))
-                .appendQueryParameter("format",getContext().getResources().getString(R.string.json))
-                .appendQueryParameter("show-fields",getContext().getResources().getString(R.string.show_fields))
-                .appendQueryParameter("order-by",getContext().getResources().getString(R.string.order_newest))
+                .appendQueryParameter("format", getContext().getResources().getString(R.string.json))
+                .appendQueryParameter("show-fields", getContext().getResources().getString(R.string.show_fields))
+                .appendQueryParameter("order-by", getContext().getResources().getString(R.string.order_newest))
                 .appendQueryParameter("api-key", getContext().getResources().getString(R.string.api_key))
                 .appendQueryParameter("page", page)
                 .appendQueryParameter("section", section)
@@ -78,7 +76,6 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
         try {
             url = new URL(builder.toString());
         } catch (MalformedURLException exception) {
-            Log.e("LOG_TAG", "Error with creating URL", exception);
             return null;
         }
         return url;
@@ -97,7 +94,7 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
             inputStream = urlConnection.getInputStream();
             jsonResponse = readFromStream(inputStream);
         } catch (IOException e) {
-            Log.d("LOG_TAG", e.toString());
+            return jsonResponse;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -126,6 +123,9 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
 
     private ArrayList<NewsModel> extractFeatureFromJSON(String newsJSON) {
         ArrayList<NewsModel> resultList = new ArrayList<>();
+        if (newsJSON.isEmpty()) {
+            return resultList;
+        }
         try {
             JSONObject baseJsonObject = new JSONObject(newsJSON);
             JSONObject response = baseJsonObject.getJSONObject("response");
@@ -139,16 +139,23 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
                         String date = resultObject.getString("webPublicationDate");
                         String url = resultObject.getString("webUrl");
                         String sectionName = resultObject.getString("sectionName");
-                        String imgUrl = fields.getString("thumbnail");
+                        String imgUrl;
+                        try {
+                            imgUrl = fields.getString("thumbnail");
+                        } catch (JSONException e) {
+                            imgUrl = "";
+                        }
                         String title = fields.getString("headline");
                         resultList.add(new NewsModel(title, date, imgUrl, url, sectionName));
+                        if (i==results.length()-1){
+                            return resultList;
+                        }
                     }
                 }
             }
         } catch (JSONException e) {
-            Log.e("LOG_TAG", "Problem parsing the news JSON results", e);
+            return resultList;
         }
-
         return resultList;
     }
 
@@ -167,7 +174,7 @@ public class NewsAsyncTaskLoader extends AsyncTaskLoader<List<NewsModel>> {
                 jsonResponse = makeHttpRequest(url);
             }
         } catch (IOException e) {
-            Log.d("LOG_TAG", e.toString());
+            return extractFeatureFromJSON(jsonResponse);
         }
         return extractFeatureFromJSON(jsonResponse);
     }
